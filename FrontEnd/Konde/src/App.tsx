@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Box, ThemeProvider, createTheme } from '@mui/material';
 import NavBar from './components/NavBar';
+import NavBarSpacer from './components/NavBarSpacer';
 import Home from './components/Home';
 import ClientList from './components/ClientList';
 import ClientForm from './components/ClientForm';
@@ -50,6 +51,7 @@ function App() {
           <NavBar>
             <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           </NavBar>
+          <NavBarSpacer />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/clients" element={<ClientListPage />} />

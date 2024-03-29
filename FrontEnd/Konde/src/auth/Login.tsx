@@ -7,8 +7,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Logic for handling login
+  const handleLogin = (event) => {
+    event.preventDefault();
+    // Logic for validating login credentials
+    // If successful:
+    onLoginSuccess(); // This should be called when login is successful
   };
 
   return (

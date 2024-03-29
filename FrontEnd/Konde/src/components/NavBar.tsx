@@ -17,9 +17,10 @@ function NavBar({ children }) {
     const handleMenuClose = () => {
         setAnchorEl(null); // Close the menu
     };
+    
 
     return (
-        <AppBar position="static" color="inherit" sx={{ backgroundColor: theme.palette.background.default }}>
+        <AppBar position="fixed" color="inherit" sx={{ backgroundColor: theme.palette.background.default, marginBottom: '60px' }}>
             <Toolbar>
                 <Box sx={{ display: 'flex', flexGrow: 1 }}>
                     {/* Hamburger menu icon */}
