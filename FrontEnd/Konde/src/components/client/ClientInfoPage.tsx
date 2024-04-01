@@ -2,7 +2,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import ClientDetails from './ClientDetailsComponent';
-import PreviousAppointments from './PreviousAppointments';
+import PreviousAppointments from '../appointment/PreviousAppointments';
 import { Box } from '@mui/material';
 
 const ClientInfoPage: React.FC = () => {
