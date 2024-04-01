@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Hair Stylist Backend API",
-    "description": "API for managing client details, appointments, and services for hair stylists, including user registration, login, and Twilio integration.",
+    "title": "Hair Stylist and Beauty Review Backend API",
+    "description": "API for managing client details, appointments, services for hair stylists, user registration, login, Twilio integration, and Beauty Review product interactions including adding and removing products.",
     "version": "1.0.0"
   },
   "servers": [
@@ -147,149 +147,107 @@
         }
       }
     },
-    "/services/{id}": {
-      "put": {
-        "summary": "Update an existing service",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the service to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Updated service details",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Service"
+    "/products": {
+      "get": {
+        "summary": "Get a list of all Beauty Review products",
+        "responses": {
+          "200": {
+            "description": "A list of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsResponse"
+                }
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Service updated"
-          },
-          "404": {
-            "description": "Service not found"
-          }
         }
       },
-      "delete": {
-        "summary": "Delete a service",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the service to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Service deleted"
-          },
-          "404": {
-            "description": "Service not found"
-          }
-        }
-      }
-    },
-    "/registration": {
       "post": {
-        "summary": "Register a new user",
+        "summary": "Add a Beauty Review product to the user's database",
         "requestBody": {
-          "description": "User data for registration",
+          "description": "Product to add",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Product"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "User registered"
-          },
-          "400": {
-            "description": "Invalid input data"
+            "description": "Product added to the database"
           }
         }
       }
     },
-    "/login": {
-      "post": {
-        "summary": "User login",
-        "requestBody": {
-          "description": "User login credentials",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserLogin"
-              }
+    "/products/{productId}": {
+      "delete": {
+        "summary": "Remove a Beauty Review product from the user's database",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the product to remove",
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Login successful",
+            "description": "Product removed from the database"
+          },
+          "404": {
+            "description": "Product not found in the database"
+          }
+        }
+      }
+    },
+    "/BeautyReview/products/top_rated": {
+      "get": {
+        "summary": "Get a list of all top rated Beauty Review products",
+        "responses": {
+          "200": {
+            "description": "A list of top-rated products",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginSuccessResponse"
+                  "$ref": "#/components/schemas/TopRatedProductsResponse"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Authentication failed"
           }
         }
       }
     },
-    "/twilio/send-sms": {
-      "post": {
-        "summary": "Send an SMS to a client",
-        "requestBody": {
-          "description": "SMS content and recipient",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "to": {
-                    "type": "string",
-                    "description": "The recipient phone number"
-                  },
-                  "message": {
-                    "type": "string",
-                    "description": "The message content"
-                  }
-                },
-                "required": ["to", "message"]
-              }
+    "/BeautyReview/products/rating/{productId}": {
+      "get": {
+        "summary": "Get the overall rating for a Beauty Review product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the product to get the rating for",
+            "schema": {
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "SMS sent"
-          },
-          "400": {
-            "description": "Error in sending SMS"
+            "description": "Overall product rating",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductRatingResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -326,6 +284,60 @@
             "type": "number",
             "description": "Price of the service",
             "format": "double"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "ProductsResponse": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          }
+        }
+      },
+      "TopRatedProductsResponse": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            }
+          }
+        }
+      },
+      "ProductRatingResponse": {
+        "type": "object",
+        "properties": {
+          "rating_count": {
+            "type": "integer"
+          },
+          "rating": {
+            "type": "number"
           }
         }
       },

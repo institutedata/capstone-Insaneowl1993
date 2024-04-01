@@ -3,8 +3,6 @@ const {Client} = require('../models');
 const { asyncHandler } = require('../middleware');
 
 
-
-
 // @desc   Get All Clients
 // @route  GET /api/client
 const getAllClient = asyncHandler(async (req, res, next) => {

@@ -17,7 +17,7 @@ const PORT = 3000
 app.use(express.json())
 
 app.get('/' , (req, res) => {
-  res.json({ STATUS: 'Connected', MESSAGE: 'Welcome to Hair Stylist Server'})
+  res.json({ STATUS: 'Connected', MESSAGE: 'Welcome to Konde'})
 })
 
 app.use('/api', serviceRoute)
