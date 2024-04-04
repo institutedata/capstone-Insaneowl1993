@@ -3,6 +3,8 @@ const {appointmentController} = require('../controllers');
 
 const router = Router();
 
+router.get('/appointments', appointmentController.getAllAppointments);
+
 // Route to create a new appointment
 router.post('/appointments', appointmentController.newAppointment);
 

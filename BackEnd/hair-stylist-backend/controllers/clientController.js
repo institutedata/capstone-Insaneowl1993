@@ -7,8 +7,8 @@ const { asyncHandler } = require('../middleware');
 // @route  GET /api/client
 const getAllClient = asyncHandler(async (req, res, next) => {
       try {
-          const client = await Client.find({});
-
+        const client = await Client.find({});
+          console.log(client);
           res.status(200).json({ success: true, message: 'All Clients Fetch', data: client})
       } catch (error) {
          res

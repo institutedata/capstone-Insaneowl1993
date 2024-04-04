@@ -1,6 +1,32 @@
-const Service = require('../models');
+const Service = require('../models/Service');
+const { asyncHandler } = require('../middleware');
 
-exports.createService = async (req, res) => {
+
+const getAllServices = asyncHandler(async (req, res, next) => {
+  try {
+    const Service = await Service.find({});
+      console.log(Service);
+      res.status(200).json({ success: true, message: 'All Services Fetch', data: Service})
+  } catch (error) {
+     res
+       .status(400)
+       .json({ success: false, message: error.message }); 
+  }
+})
+
+const getService = asyncHandler(async (req, res, next) => {
+  try {
+      const Service = await Service.findById(req.params.id);
+
+      res.status(200).json({ success: true, message: 'Service Fetched', data: Service})
+  } catch (error) {
+     res
+       .status(400)
+       .json({ success: false, message: error.message }); 
+  }
+})
+
+const createService = async (req, res) => {
   try {
     const { name, duration, price } = req.body;
     const newService = new Service({ name, duration, price });
@@ -11,7 +37,7 @@ exports.createService = async (req, res) => {
   }
 };
 
-exports.updateService = async (req, res) => {
+const updateService = async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!service) {
@@ -23,7 +49,7 @@ exports.updateService = async (req, res) => {
   }
 };
 
-exports.deleteService = async (req, res) => {
+const deleteService = async (req, res) => {
   try {
     const service = await Service.findByIdAndDelete(req.params.id);
     if (!service) {
@@ -34,4 +60,8 @@ exports.deleteService = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const serviceController = { 
+  createService, getAllServices, getService, updateService, deleteService };
+module.exports = serviceController
 

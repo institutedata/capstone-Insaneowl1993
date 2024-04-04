@@ -17,4 +17,4 @@
     });
 
     const User = mongoose.model(TAG, userSchema);
-    module.exports = [User];
+    module.exports = {User};

@@ -1,7 +1,17 @@
 const { Appointment } = require('../models/Appointment');
-const {Client} = require('../models');
 const { asyncHandler } = require('../middleware');
 
+const getAllAppointments = asyncHandler(async (req, res, next) => {
+    try {
+      const appointment = await Appointment.find({});
+        console.log(appointment);
+        res.status(200).json({ success: true, message: 'All Appointments Fetch', data: appointment})
+    } catch (error) {
+       res
+         .status(400)
+         .json({ success: false, message: error.message }); 
+    }
+})
 
 const newAppointment = asyncHandler(async (req, res, next) => {
 
@@ -13,7 +23,7 @@ const newAppointment = asyncHandler(async (req, res, next) => {
         const savedAppointment = await appointment.save();
 
         // Add appointment to client's history
-        const client = await Client.findById(req.params.clientId);
+        const client = await Appointment.findById(req.params.clientId);
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
@@ -69,10 +79,5 @@ const deleteAppointment = asyncHandler (async(req, res) => {
 });
 
 
-exports.newAppointment = newAppointment;
-exports.findAppointment = findAppointment;
-exports.updateAppointment = updateAppointment;
-exports.deleteAppointment = deleteAppointment;
-
-const appointmentController = { newAppointment, updateAppointment, deleteAppointment, findAppointment };
+const appointmentController = { newAppointment, updateAppointment, deleteAppointment, findAppointment,getAllAppointments };
 module.exports = appointmentController;

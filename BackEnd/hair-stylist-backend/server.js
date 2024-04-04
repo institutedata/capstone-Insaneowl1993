@@ -20,10 +20,9 @@ app.get('/' , (req, res) => {
   res.json({ STATUS: 'Connected', MESSAGE: 'Welcome to Konde'})
 })
 
-app.use('/api', serviceRoute)
-app.use("/api/", appointmentRoute);
-app.use("/api/client", clientRoute);
-app.use('/api', serviceRoute);
+ app.use('/api', serviceRoute);
+ app.use("/api/", appointmentRoute);
+ app.use("/api/client", clientRoute);
 
 app.post('/api/appointment', async (req, res) => {
   try {

@@ -30,4 +30,4 @@ const ClientSchema = new mongoose.Schema(
     )
 
 const Client = mongoose.model(TAG, ClientSchema)
-module.exports = [Client ];
+module.exports =  {Client};

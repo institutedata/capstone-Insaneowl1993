@@ -27,4 +27,4 @@ const appointmentSchema = new mongoose.Schema({
 
 const Appointment = mongoose.model(TAG, appointmentSchema);
 
-module.exports = [Appointment];
+module.exports = {Appointment};
