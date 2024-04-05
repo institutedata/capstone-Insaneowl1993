@@ -8,8 +8,29 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleRegister = () => {
-    // Logic for handling registration
+  const handleRegister = () => {async (userData) => {
+      const response = await fetch('/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+    
+      return response.json();
+    };
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const userData = {
+      username: event.target.username.value,
+      password: event.target.password.value,
+      // include other necessary user fields
+    };
+  
+    const result = await registerUser(userData);
+    console.log(result); // Handle the response appropriately
   };
 
   return (
