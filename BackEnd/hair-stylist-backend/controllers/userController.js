@@ -1,80 +1,67 @@
-const asyncHandler = require('express-async-handler');
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 
-// Register user
-exports.registerUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    res.status(400).json({ message: "Please provide all required fields." });
-    return;
-  }
-
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    res.status(400).json({ message: "User already exists." });
-    return;
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await User.create({
-    username,
-    email,
-    password: hashedPassword,
-  });
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user._id),
+// Register a new user
+const registerUser = async (req, res) => {
+  try {
+    // Hash password
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    
+    // Create user
+    const user = new User({
+      username: req.body.username,
+      password: hashedPassword,
     });
-  } else {
-    res.status(400).json({ message: "Invalid user data." });
+
+    // Save user
+    const newUser = await user.save();
+
+    // Send response
+    res.status(201).json({ success: true, message: 'User created', data: newUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
+};
 
-// Login user
-exports.loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+// User login
+const loginUser = async (req, res) => {
+  try {
+    // Check if user exists
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-  const user = await User.findOne({ email });
+    // Validate password
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401).json({ message: "Invalid email or password." });
+    // Generate token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Send response
+    res.status(200).json({ success: true, message: 'User logged in', token: token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
+};
 
 // Get user profile
-exports.getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+const getUserProfile = async (req, res) => {
+  try {
+    // Assuming userID is obtained from token verification middleware
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-  if (user) {
-    res.json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-    });
-  } else {
-    res.status(404).json({ message: "User not found." });
+    res.status(200).json({ success: true, message: 'User profile fetched', data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
-
-// Utility function to generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
-  });
 };
+
+module.exports = { registerUser, loginUser, getUserProfile };

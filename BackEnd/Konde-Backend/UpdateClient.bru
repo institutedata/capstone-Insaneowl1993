@@ -1,0 +1,19 @@
+meta {
+  name: UpdateClient
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{3000}}/api/clients/660fccf54f9844bb7b3c67c3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@exampletwo.com"
+  }
+}
