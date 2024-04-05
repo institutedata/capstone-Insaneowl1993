@@ -2,6 +2,8 @@ const express = require('express');
 const connectDb = require('./dbConnect');
 const { serviceRoute, appointmentRoute, clientRoute, userRoute } = require('./routes/indexRoute');
 
+require('dotenv').config();
+
 connectDb();
 
 const app = express();

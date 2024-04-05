@@ -1,6 +1,6 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs'); // Assuming bcryptjs is used for password hashing
-const jwt = require('jsonwebtoken'); // Assuming JWT is used for token generation
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Register a new user
 const registerUser = async (req, res) => {
