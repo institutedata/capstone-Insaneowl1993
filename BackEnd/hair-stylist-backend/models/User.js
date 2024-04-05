@@ -1,20 +1,12 @@
-       const mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const TAG = "User";
 
-       const TAG = "User";
-       
-       const userSchema = new mongoose.Schema({
-        username: {
-            type: String,
-            required: [true, "Username is required"],
-            unique: true,
-            minLength: 3,
-        },
-       password: {
-            type: String,
-            required: [true, "Password is required"],
-            minLength: 5,
-        }
-    });
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true, minLength: 3 },
+  password: { type: String, required: true, minLength: 5 }
+}, {
+  collection: TAG
+});
 
-    const User = mongoose.model(TAG, userSchema);
-    module.exports = {User};
+const User = mongoose.model(TAG, userSchema);
+module.exports = { User };
