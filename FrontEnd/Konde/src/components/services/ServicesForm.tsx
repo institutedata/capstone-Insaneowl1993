@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Card, CardContent, Typography, Box, TextField, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { PATH_SERVER } from '../../routes';
 
 interface Service {
   id: number;
@@ -9,14 +11,36 @@ interface Service {
   estimatedTime: string;
 }
 
-interface ServiceFormProps {
-  onSubmit: (service: Service) => void;
+interface ServiceData {
+  id: number;
+  name: string;
+  price: string;
+  duration: string;
 }
 
-const ServicesForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
+interface ServiceFormProps {
+  onSubmit?: (service: Service) => void;
+}
+
+const ServicesForm: React.FC<ServiceFormProps> = ({ onSubmit  }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
+  const [data, setData] = useState<ServiceData[]>([]);
+
+  useEffect(() => {
+   const fetchData = async () => {
+    try {
+      const res = await axios.get(PATH_SERVER.SERVICES);
+      setData(res?.data);
+      console.log('Data: ', data)
+    } catch (error: any) {
+      console.error(error);
+    }
+   }
+
+   fetchData();
+  }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,7 +50,7 @@ const ServicesForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
       price,
       estimatedTime,
     };
-    onSubmit(newService);
+    //onSubmit(newService);
     setName('');
     setPrice('');
     setEstimatedTime('');
@@ -39,6 +63,13 @@ const ServicesForm: React.FC<ServiceFormProps> = ({ onSubmit }) => {
           <Typography variant="h6" gutterBottom>
             Add Service
           </Typography>
+          {/* <Typography variant='overline'>
+            {data?.data?.map((service) => (
+              <div key={service.id}>
+                {service.name}
+              </div>
+            ))}
+          </Typography>  */}
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
