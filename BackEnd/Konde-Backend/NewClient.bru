@@ -1,0 +1,19 @@
+meta {
+  name: NewClient
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{3000}}/api/clients
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com"
+  }
+}
