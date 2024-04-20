@@ -1,6 +1,6 @@
 Mermaid Chart for Project
 
-```Mermaid
+```mermaid
 
 flowchart TD
     A[Home Page] --> B(Sign in page)
